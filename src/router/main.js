@@ -4,7 +4,14 @@ import {
     createWebHashHistory    
 } from 'vue-router'
 
-const routes = []
+import Index from "../pages/Index.vue"
+
+const routes = [
+{
+    path:"/",
+    component: Index
+}
+]
 
 const router = createrRouter({
     history:createWebHashHistory(),

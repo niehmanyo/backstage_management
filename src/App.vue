@@ -14,31 +14,24 @@ import {
 
 <template>
 
-<!-- <el-row class="mb-4">
+<el-row class="mb-4">
     <el-button>Default</el-button>
     <el-button type="primary">Primary</el-button>
     <el-button type="success">Success</el-button>
     <el-button type="info">Info</el-button>
     <el-button type="warning">Warning</el-button>
     <el-button type="danger">Danger</el-button>
-  </el-row> -->
-  <button class="btn">
-    anniu
-  </button>
+  </el-row>
 
-  
 
 </template>
 
-<style scoped>
 
+<style scoped>
 header {
   line-height: 1.5;
 }
 
-.btn {
-  @apply bg-purple-300 rounded-4xl text-indigo-500 px-4 py-2 transition-all duration-500 hover:(bg-purple-500) focus: ring-8 bg-light-50
-}
 
 .logo {
   display: block;
@@ -62,8 +55,6 @@ header {
     flex-wrap: wrap;
   }
 }
-
-
 </style>
 
 

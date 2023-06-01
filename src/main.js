@@ -4,30 +4,32 @@ import { createApp } from 'vue'
 import App from './App.vue'
 import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
-import {
-    createrRouter,
-    createWebHashHistory    
-} from 'vue-router'
+
 import HelloWorld from "./components/HelloWorld.vue"
-import r from "./router/main"
+import {
+    createRouter,
+    createWebHashHistory   , 
+} from 'vue-router'
+
+import Index from "~/pages/Index.vue"
+
+const routes = [
+{
+    path:"/",
+    component: Index
+}
+]
+
+const router = createRouter({
+    history: createWebHashHistory(),
+    routes
+})
 const app = createApp(App)
 
 
-
-const routes = [
-    {
-        path:"/",component: HelloWorld
-    }
-]
-
-const router = createrRouter({
-    history:createWebHashHistory(),
-    routes
-})
-app.use(r)
-
+// app.use(router)
 app.use(ElementPlus)
 
-import 'virtual:windi.css'
+// import 'virtual:windi.css'
 
 app.mount('#app')
