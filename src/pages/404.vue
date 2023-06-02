@@ -1,6 +1,5 @@
-
 <template>
     <div>
-        后台首页asdasd
+        404
     </div>
 </template>
