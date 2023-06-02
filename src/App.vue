@@ -19,8 +19,8 @@ import {
 </template>
 
 
-<style scoped>
-header {
+<style>
+/* header {
   line-height: 1.5;
 }
 
@@ -46,6 +46,10 @@ header {
     place-items: flex-start;
     flex-wrap: wrap;
   }
+} */
+body{
+  margin: 0;
+  padding: 0;
 }
 </style>
 
