@@ -6,9 +6,9 @@ Upon successful login, you can use Vue Router to navigate the user to the dashbo
 Make sure you have the necessary dependencies (Vue.js and Element Plus) installed and properly configured in your project for this code to work.
 -->
 <template>
-    <el-row class="bg-light-50 min-w-screen min-h-screen"> <!-- min-w-screen 水平铺满-->
+    <el-row class="bg-blue-300  min-w-screen min-h-screen"> <!-- min-w-screen 水平铺满-->
 
-        <el-col :span="14" class="grid-content bg-blue-300 flex items-center justify-center">
+        <el-col :span="16" class="grid-content flex items-center justify-center">
             <!-- flex items-center justify-center 垂直水平方向居中-->
             <div>
                 <div class="font-bold text-5xl text-light-50 py-3">民生饭店管理系统</div>
@@ -20,11 +20,11 @@ Make sure you have the necessary dependencies (Vue.js and Element Plus) installe
 
         </el-col>
 
-        <el-col :span="9" class="grid-content bg-light-50 flex items-center justify-center">
+        <el-col :span="8" class="grid-content bg-light-50 flex items-center justify-center">
 
             <div class="login-container">
                 <el-card class="login-card">
-                    <h3 class="login-title">欢迎回来</h3>
+                    <h3 class="login-title text-3xl">欢迎回来</h3>
                     <h4 class="text-center font-bold">后台管理系统</h4>
                     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form">
                         <el-form-item prop="username">
@@ -116,6 +116,7 @@ Make sure you have the necessary dependencies (Vue.js and Element Plus) installe
 
 
 <script>
+
 export default {
     data() {
         return {

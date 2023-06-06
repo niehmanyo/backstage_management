@@ -1,50 +1,80 @@
 <template>
-    <div class="user-management">
-      <h2>User Management</h2>
-      
-      <div v-if="users.length === 0">
-        No users found.
-      </div>
-      
-      <ul v-else>
-        <li v-for="user in users" :key="user.id">
-          {{ user.name }}
-        </li>
-      </ul>
+    <div class="insert-form-container">
+      <el-card class="insert-form-card">
+        <h3 class="insert-form-title">Insert Data</h3>
+        <el-form :model="formData" :rules="formRules" ref="insertForm" class="insert-form">
+          <el-form-item v-for="field in tableFields" :key="field.column" :prop="field.column" :label="field.column">
+            <el-input v-model="formData[field.column]"></el-input>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" @click="submitForm">Submit</el-button>
+          </el-form-item>
+        </el-form>
+      </el-card>
     </div>
   </template>
   
   <script>
   export default {
-    name: 'User',
     data() {
       return {
-        users: [] // Placeholder data, replace with actual user data
+        formData: {},
+        formRules: {},
+        tableFields: [
+          { column: 'field1' },
+          { column: 'field2' },
+          { column: 'field3' },
+          // Add more fields here
+        ],
       };
     },
-    mounted() {
-      // Fetch users from API or database and populate the "users" array
-      this.fetchUsers();
-    },
     methods: {
-      fetchUsers() {
-        // Implement your user data fetching logic here
-        // Example:
-        // axios.get('/api/users')
-        //   .then(response => {
-        //     this.users = response.data;
-        //   })
-        //   .catch(error => {
-        //     console.error(error);
-        //   });
-      }
-    }
+      submitForm() {
+        this.$refs.insertForm.validate((valid) => {
+          if (valid) {
+            // Make an API call to insert data into MySQL
+            // You can use libraries like Axios or fetch for the API call
+  
+            // Example using Axios:
+            // axios.post('/api/insertData', this.formData)
+            //   .then(response => {
+            //     // Handle success
+            //   })
+            //   .catch(error => {
+            //     // Handle error
+            //   });
+  
+            // Clear the form after successful submission
+            this.$refs.insertForm.resetFields();
+            this.$message.success('Data inserted successfully');
+          } else {
+            this.$message.error('Please fill in all the required fields');
+          }
+        });
+      },
+    },
   };
   </script>
   
   <style scoped>
-  .user-management {
-    /* Add your styling here */
+  .insert-form-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f5f7fa;
+  }
+  
+  .insert-form-card {
+    width: 400px;
+  }
+  
+  .insert-form-title {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .insert-form {
+    padding: 20px;
   }
   </style>
-  
