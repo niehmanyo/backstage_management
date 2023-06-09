@@ -1,181 +1,101 @@
-<!-- <template>
-    <div class="backstage-management min-h-screen min-w-screen">
-      <h1>Backstage Management</h1>
-  
-      <div class="sidebar">
-        <ul>
-          <li v-for="item in menuItems" :key="item.id" @click="selectMenuItem(item)">
-            {{ item.name }}
-          </li>
-        </ul>
-      </div>
-  
-      <div class="content">
-        <component :is="selectedComponent"></component>
-      </div>
-    </div>
-  </template>
-  
-  <script>
-  import Dashboard from '../components/Dashboard.vue';
-  import Users from '../components/Users.vue';
-  import Products from '../components/WelcomeItem.vue';
-
-  
-  export default {
-    name: 'BackstageManagement',
-    data() {
-      return {
-        menuItems: [
-          { id: 1, name: 'Dashboard', component: 'dashboard' },
-          { id: 2, name: 'Users', component: 'users' },
-          { id: 3, name: 'Products', component: 'products' }
-        ],
-        selectedMenuItem: null
-      };
-    },
-    computed: {
-      selectedComponent() {
-        if (this.selectedMenuItem) {
-          switch (this.selectedMenuItem.component) {
-            case 'dashboard':
-              return Dashboard;
-            case 'users':
-              return Users;
-            case 'products':
-              return Products;
-            default:
-              return null;
-          }
-        }
-        return null;
-      }
-    },
-    methods: {
-      selectMenuItem(item) {
-        this.selectedMenuItem = item;
-      }
-    }
-  };
-  </script>
-  
-  <style scoped>
-  .backstage-management {
-    display: flex;
-    flex-direction: row;
-  }
-  
-  .sidebar {
-    width: 200px;
-    background-color: #f0f0f0;
-    padding: 20px;
-  }
-  
-  .content {
-    flex-grow: 1;
-    padding: 20px;
-  }
-  </style> -->
 <template>
   <div style="height: 100%;">
-    <el-container class="layout-container-demo min-w-screen min-h-screen ">
+    <el-container class="layout-container-demo  min-h-screen ">
+
       <el-aside style="height: 100%;" class="bg-light-100">
-        <el-scrollbar>
-          <el-menu :default-openeds="['1', '3']" background-color="rgb(48,65,86)" text-color="#fff" style="height: 100%;">
+        <el-menu :default-openeds="['1', '3']" background-color="rgb(48,65,86)" text-color="#fff" style="height: 100%;;"
+          class="min-h-screen ">
 
-            <div class="text-center justify-center font-bold text-light-50 text-2xl py-4 ">
-              <img src="../assets/logo.svg" class="h-35px px-4 py-1" style="width:max-content">
-              <b>
-                后台管理系统
-              </b>
-            </div>
+          <div style="height: 60px; text-align: center; line-height: 60px; padding-bottom: 10px;">
+            <img src="../assets/logo.svg"
+              style="width: 20px; position: relative; top: 35px; margin-right: 5px; left: 50px;">
+            <b style="color:white;" class="text-2xl">
+              后台管理系统
+            </b>
+          </div>
 
-            <el-sub-menu index="1">
-              <template #title>
-                <el-icon>
-                  <message />
-                </el-icon>主页
-              </template>
-              <el-menu-item-group>
-                <template #title>Group 1</template>
-                <el-menu-item index="1-1">Option 1</el-menu-item>
-                <el-menu-item index="1-2">Option 2</el-menu-item>
-              </el-menu-item-group>
-              <el-menu-item-group title="Group 2">
-                <el-menu-item index="1-3">Option 3</el-menu-item>
-              </el-menu-item-group>
-              <el-sub-menu index="1-4">
-                <template #title>Option4</template>
-                <el-menu-item index="1-4-1">Option 4-1</el-menu-item>
-              </el-sub-menu>
-            </el-sub-menu>
-            <el-sub-menu index="2">
-              <template #title>
-                <el-icon><icon-menu /></el-icon>会员用户
-              </template>
-              <el-menu-item-group>
-                <template #title>Group 1</template>
-                <el-menu-item index="2-1">Option 1</el-menu-item>
-                <el-menu-item index="2-2">Option 2</el-menu-item>
-              </el-menu-item-group>
-              <el-menu-item-group title="Group 2">
-                <el-menu-item index="2-3">Option 3</el-menu-item>
-              </el-menu-item-group>
-              <el-sub-menu index="2-4">
-                <template #title>Option 4</template>
-                <el-menu-item index="2-4-1">Option 4-1</el-menu-item>
-              </el-sub-menu>
-            </el-sub-menu>
-            <el-sub-menu index="3">
-              <template #title>
-                <el-icon>
-                  <setting />
-                </el-icon>菜品
-              </template>
-              <el-menu-item-group>
-                <template #title>Group 1</template>
-                <el-menu-item index="3-1">Option 1</el-menu-item>
-                <el-menu-item index="3-2">Option 2</el-menu-item>
-              </el-menu-item-group>
-              <el-menu-item-group title="Group 2">
-                <el-menu-item index="3-3">Option 3</el-menu-item>
-              </el-menu-item-group>
-              <el-sub-menu index="3-4">
-                <template #title>Option 4</template>
-                <el-menu-item index="3-4-1">Option 4-1</el-menu-item>
-              </el-sub-menu>
-            </el-sub-menu>
-          </el-menu>
-        </el-scrollbar>
+          <el-menu-item>
+            <template #title>
+
+              <el-icon>
+                <House />
+              </el-icon>
+              <span>主页</span>
+            </template>
+          </el-menu-item>
+
+
+          <el-menu-item>
+
+            <template #title>
+
+              <el-icon>
+                <UserFilled />
+              </el-icon>
+              <span>会员用户</span>
+            </template>
+          </el-menu-item>
+
+          <el-menu-item>
+
+            <template #title>
+
+              <el-icon>
+                <Bowl />
+              </el-icon>
+              <span>菜品</span>
+            </template>
+          </el-menu-item>
+
+
+        </el-menu>
+
       </el-aside>
 
+      <el-container style="height: 100%;">
 
-      <el-container style="height: 100%;" class="py-5 background: #000;">
+        <!-- <el-header class=""> -->
+        <!-- display: inline-flex;
+            min-width: 100%;
+            align-items: left;
+            justify-content: center;
+            height: 100%;
+            right: 20px;
+            border-top: 1cm; -->
 
-        <el-header style="text-align: right; font-size: 12px padding-top:10cm background: #000;">
 
-          <div class="toolbar text-1xl  bg-light-100">
-            <el-dropdown class="bg-light-100">
-              <el-icon style="margin-right: 8px; margin-top: 1px ">
-                <setting />
+        <el-header style="text-align: left ;
+                                  border-bottom: 1px solid #ccc;
+                                  line-height: 60px;
+                                  display: flex;">
+          <div class="toolbar text-1xl py-4">
+
+            <el-dropdown style="cursor: pointer;">
+              <el-icon style="margin-right: 8px; margin-top: 1px">
+                <ArrowDown />
               </el-icon>
               <template #dropdown>
                 <el-dropdown-menu>
-                  <el-dropdown-item>查看</el-dropdown-item>
-                  <el-dropdown-item>添加</el-dropdown-item>
-                  <el-dropdown-item>删除</el-dropdown-item>
+                  <el-dropdown-item>个人信息</el-dropdown-item>
+                  <el-dropdown-item>退出</el-dropdown-item>
+
                 </el-dropdown-menu>
               </template>
             </el-dropdown>
-            <span>${data.values}</span>
+            <span>用户名</span>
           </div>
         </el-header>
 
+
+
+        <!-- </el-header> -->
+
+
         <el-main>
 
-          <div style="padding-top: 10px" class="px-4">
 
-            <el-form>
+          <div style="padding: 30px 0;">
+            <el-form class="px-4">
               <el-row>
                 <el-form-item>
                   <el-input style="width: 25vh; padding-right: 1vh;" v-model="input" :suffix-icon="Search"
@@ -200,43 +120,66 @@
                 </el-form-item>
               </el-row>
             </el-form>
-
           </div>
 
-          <el-scrollbar>
-            <el-table :data="tableData" stript class="px-3" style="width: 100%;">
-              <el-table-column fixed="left" width="180" prop="date" label="日期" />
-              <el-table-column width=300 prop="name" label="姓名" />
-              <el-table-column prop="address" label="住址" />
+          <div class="px-4">
+            <el-row>
+              <el-form-item class="px-3">
+                <el-button type="success" :icon="Edit" @click="">新增</el-button>
+              </el-form-item>
+              <el-form-item class="px-3">
+                <el-button type="danger" :icon="Delete" @click="">批量删除</el-button>
+              </el-form-item>
+              <el-form-item class="px-3">
+                <el-button type="primary" :icon="Upload" @click="">导入</el-button>
+              </el-form-item>
+              <el-form-item class="px-3">
+                <el-button type="primary" :icon="Download" @click="">导出</el-button>
+              </el-form-item>
+            </el-row>
+          </div>
 
-              <el-table-column fixed="right" prop="address">
-                <template #default>
-                  <el-button link type="primary" size="small" @click=delete1>删除</el-button>
-                  <el-button link type="primary" size="small" @click=edit>编辑</el-button>
-                </template>
-              </el-table-column>
 
-            </el-table>
+          <div>
+            <el-scrollbar class="min-w-screen min-h-screen">
+              <el-table :data="tableData" stript class="px-3" border style="width: 100%;">
+                <el-table-column width="180" prop="date" label="日期" />
+                <el-table-column width=300 prop="name" label="姓名" />
+                <el-table-column prop="address" label="住址" />
 
-            <div class="example-pagination-block py-4 px-4">
-              <el-pagination v-model:current-page="currentPage4" v-model:page-size="pageSize4"
-                :page-sizes="[5, 10, 25, 50]" :small="small" :disabled="disabled" :background="background"
-                layout="total, sizes, prev, pager, next, jumper" :total="400" @size-change="handleSizeChange"
-                @current-change="handleCurrentChange" />
-            </div>
-          </el-scrollbar>
+                <el-table-column label="操作" fixed="right" prop="address">
+                  <template #default>
+                    <el-button type="danger" size="small" @click=delete1>删除</el-button>
+                    <el-button type="primary" size="small" @click=edit>编辑</el-button>
+                  </template>
+                </el-table-column>
+
+              </el-table>
+
+              <div class="example-pagination-block py-4 px-4">
+                <el-pagination v-model:current-page="currentPage4" v-model:page-size="pageSize4"
+                  :page-sizes="[5, 10, 25, 50]" :small="small" :disabled="disabled" :background="background"
+                  layout="total, sizes, prev, pager, next, jumper" :total="400" @size-change="handleSizeChange"
+                  @current-change="handleCurrentChange" />
+              </div>
+            </el-scrollbar>
+          </div>
         </el-main>
 
+
       </el-container>
+
+
     </el-container>
 
   </div>
 </template>
   
 <script lang="ts" setup>
+
 import { reactive, ref } from 'vue'
-import { Menu as IconMenu, Message, Setting } from '@element-plus/icons-vue'
-import { Search } from '@element-plus/icons-vue'
+import { Menu as IconMenu, Message, Setting, Edit, ArrowDown, UserFilled, Bowl, Delete, Upload, Download } from '@element-plus/icons-vue'
+import { Search, House } from '@element-plus/icons-vue'
 import { create } from 'lodash';
 import axios from 'axios';
 
@@ -272,17 +215,16 @@ const tableData = ref(a)
 
 async function fetchData(pageNum: number, pageSize: number) {
   try {
-    
-    const response = await fetch('http://localhost:9090/user/page?PageNum=1&PageSize=3',{
-          headers: {
-            'Content-Type': 'application/json' // 设置请求头的 Content-Type
-          }
-  
-        });
+
+    const response = await fetch('http://localhost:9090/user/page?PageNum=1&PageSize=3', {
+      headers: {
+        'Content-Type': 'application/json' // 设置请求头的 Content-Type
+      }
+    });
     if (response.ok) {
       const res = await response.json();
       // tableData = res.data
-      tableData.value = res.data
+      tableData.value = res.data //因为tableData是个变量，所以要用tableData.value来保存
       console.log(res.data)
     } else {
       console.error('请求失败:', response.status);
@@ -299,17 +241,19 @@ const delete1 = () => {
   console.log('click')
 }
 
+
+
 const edit = () => {
   console.log('click')
 }
 
 const handleSizeChange = (val: number) => {
   console.log(`${val} items per page`)
-  fetchData(1,3)
+  fetchData(1, 3)
 }
 const handleCurrentChange = (val: number) => {
   console.log(`current page: ${val}`)
-  fetchData(1,3)
+  fetchData(1, 3)
 }
 
 
@@ -347,15 +291,10 @@ const handleCurrentChange = (val: number) => {
   padding: 0;
 }
 
-.layout-container-demo .toolbar {
-  /* display: inline-flex; */
-  min-width: 100%;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-  right: 20px;
-  border-top: 1cm;
+.headbg {
+  background: #42b983;
 }
+
+.layout-container-demo .toolbar {}
 </style>
-  
   

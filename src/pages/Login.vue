@@ -42,11 +42,11 @@ Make sure you have the necessary dependencies (Vue.js and Element Plus) installe
         </div>
         <!-- <div>
                 <h3 class="text-3xl text-center py-4">欢迎回来</h3>
-                </div>
+                                    </div>
 
 
 
-                <div class="text-center text-1xl text-shadow-sm text-blue-400 py-4]">
+                                    <div class="text-center text-1xl text-shadow-sm text-blue-400 py-4]">
                 账号密码登陆
             </div> -->
 
@@ -70,7 +70,7 @@ Make sure you have the necessary dependencies (Vue.js and Element Plus) installe
                     </div>
                     
 
-                        <div class="flex items-end justify-end">
+                                            <div class="flex items-end justify-end">
                         <el-form-item>
                         <el-button type="primary" @click="onSubmit">登陆</el-button>
                         <el-button>取消</el-button>
@@ -100,13 +100,13 @@ Make sure you have the necessary dependencies (Vue.js and Element Plus) installe
                     }">
                     <el-input v-model="domain.value" />
                     <el-button class="mt-2" @click.prevent="removeDomain(domain)">Delete</el-button>
-                    </el-form-item>
-                    <el-form-item>
-                        <el-button type="primary" @click="submitForm(formRef)">Submit</el-button>
-                        <el-button @click="addDomain">New domain</el-button>
-                        <el-button @click="resetForm(formRef)">Reset</el-button>
-                    </el-form-item>
-                </el-form> -->
+                                        </el-form-item>
+                                        <el-form-item>
+                                            <el-button type="primary" @click="submitForm(formRef)">Submit</el-button>
+                                            <el-button @click="addDomain">New domain</el-button>
+                                            <el-button @click="resetForm(formRef)">Reset</el-button>
+                                        </el-form-item>
+                                    </el-form> -->
 
 
         </el-col>
@@ -132,19 +132,24 @@ export default {
                     { required: true, message: '请输入密码', trigger: 'blur' },
                 ],
             },
+            array: [],
+            length: 0
         };
     },
     methods: {
+
         login() {
+            this.fetchData()
             this.$refs.loginForm.validate((valid) => {
                 if (valid) {
-                    if (this.loginForm.password == "123") {
-                        this.$router.push('/dashboard');
-
-                    } else {
-                        this.$message.error('请输入正确的格式');
+                    for (let index = 0; index < this.array.length; index++) {
+                        const element = this.array[index];
+                        if (element.password == this.loginForm.password && element.username == this.loginForm.username) {
+                            this.$router.push('/dashboard');
+                            return;
+                        }
                     }
-
+                    this.$message.error('请输入正确的密码');
                     // Perform login authentication
                     // You can make an API call here to validate the user credentials
 
@@ -156,6 +161,25 @@ export default {
                 }
             });
         },
+        // 标准的fetchData写法，一定要加header
+        async fetchData() {
+            try {
+                const response = await fetch('http://localhost:9090/user/login', {
+                    headers: {
+                        'Content-Type': 'application/json' // 设置请求头的 Content-Type
+                    }
+                });
+                if (response.ok) {
+                    const res = await response.json();
+                    this.array = res.data
+                    this.length = res.total
+
+                }
+            } catch (error) {
+                console.error('请求错误', error)
+            }
+
+        }
     },
 };
 </script>

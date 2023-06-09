@@ -13,7 +13,7 @@ import "../src/assets/global.css"
 const app = createApp(App)
 
 app.use(router)
-app.use(ElementPlus)
+app.use(ElementPlus,{size:"default"})
 
 import 'virtual:windi.css'
 
