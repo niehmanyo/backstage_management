@@ -22,7 +22,7 @@ const routes = [
         component: about
     },
     {
-        path: "/login",
+        path: "/",
         component: login
     },
     { path: '/:pathMatch(.*)*', name: 'NotFound', component: NotFound },

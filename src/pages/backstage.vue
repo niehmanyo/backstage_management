@@ -158,7 +158,7 @@
 
               <div class="example-pagination-block py-4 px-4">
                 <el-pagination v-model:current-page="currentPage4" v-model:page-size="pageSize4"
-                  :page-sizes="[5, 10, 25, 50]" :small="small" :disabled="disabled" :background="background"
+                  :page-sizes="[5, 10]" :small="small" :disabled="disabled" :background="background"
                   layout="total, sizes, prev, pager, next, jumper" :total="400" @size-change="handleSizeChange"
                   @current-change="handleCurrentChange" />
               </div>
@@ -185,13 +185,10 @@ import axios from 'axios';
 
 const data = reactive([]);
 
-const currentPage1 = ref(5)
-const currentPage2 = ref(5)
-const currentPage3 = ref(5)
+
 const currentPage4 = ref(1)
-const pageSize2 = ref(10)
-const pageSize3 = ref(100)
-const pageSize4 = ref(100)
+
+const pageSize4 = ref(5)
 const small = ref(false)
 const background = ref(false)
 const disabled = ref(false)
@@ -216,7 +213,7 @@ const tableData = ref(a)
 async function fetchData(pageNum: number, pageSize: number) {
   try {
 
-    const response = await fetch('http://localhost:9090/user/page?PageNum=1&PageSize=3', {
+    const response = await fetch(`http://localhost:9090/user/page?PageNum=${pageNum}&PageSize=${pageSize}`, {
       headers: {
         'Content-Type': 'application/json' // 设置请求头的 Content-Type
       }
@@ -235,7 +232,7 @@ async function fetchData(pageNum: number, pageSize: number) {
   }
 }
 
-fetchData(1, 3);
+fetchData(currentPage4.value, pageSize4.value)
 
 const delete1 = () => {
   console.log('click')
@@ -249,11 +246,11 @@ const edit = () => {
 
 const handleSizeChange = (val: number) => {
   console.log(`${val} items per page`)
-  fetchData(1, 3)
+  fetchData(currentPage4.value, pageSize4.value)
 }
 const handleCurrentChange = (val: number) => {
   console.log(`current page: ${val}`)
-  fetchData(1, 3)
+  fetchData(currentPage4.value, pageSize4.value)
 }
 
 
