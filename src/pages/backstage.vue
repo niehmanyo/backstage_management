@@ -65,9 +65,9 @@
 
 
         <el-header style="text-align: left ;
-                                      border-bottom: 1px solid #ccc;
-                                      line-height: 60px;
-                                      display: flex;">
+                                            border-bottom: 1px solid #ccc;
+                                            line-height: 60px;
+                                            display: flex;">
           <div class="toolbar text-1xl py-4">
 
             <el-dropdown style="cursor: pointer;">
@@ -138,7 +138,7 @@
                 <el-button type="primary" :icon="Upload" @click="">导入</el-button>
               </el-form-item>
               <el-form-item class="px-3">
-                <el-button type="primary" :icon="Download" @click="">导出</el-button>
+                <el-button type="primary" :icon="Download" @click="print">导出</el-button>
               </el-form-item>
 
 
@@ -148,8 +148,14 @@
 
           <div>
             <el-scrollbar class="min-w-screen min-h-screen">
-              <el-table :data="tableData" stript class="px-3" border style="width: 100%;">
-                <el-table-column width="180" prop="date" label="日期" />
+              <el-table :data="tableData" stript class="px-3" border style="width: 100%;"
+                @selection-change="handleSelectionChange">
+                <el-table-column type="selection" width="55" />
+
+                <el-table-column width="180" prop="date" label="日期">
+                  <template #default="scope">{{ scope.row.date }}</template>
+                </el-table-column>
+
                 <el-table-column width=300 prop="name" label="姓名" />
                 <el-table-column prop="address" label="住址" />
 
@@ -210,6 +216,21 @@ import { Menu as IconMenu, Message, Setting, Edit, ArrowDown, UserFilled, Bowl, 
 import { Search, House } from '@element-plus/icons-vue'
 import { create, method } from 'lodash';
 import axios from 'axios';
+import { ElTable } from 'element-plus'
+import { saveAs } from "file-saver";
+
+interface User {
+  date: string
+  name: string
+  address: string
+}
+
+const multipleTableRef = ref<InstanceType<typeof ElTable>>()
+const multipleSelection = ref<User[]>([])
+
+const handleSelectionChange = (val: User[]) => {
+  multipleSelection.value = val
+}
 
 const data = ref([]);
 
@@ -291,9 +312,9 @@ const add = () => {
 
 //这个是保存新增，调用接口新增用户
 async function postData() {
-  dialogFormVisible.value = false
+
   try {
- 
+
     const response = await fetch(`http://localhost:9090/user/insert`,
       {
         method: 'POST',
@@ -301,21 +322,33 @@ async function postData() {
           'Content-Type': 'application/json' // 设置请求头的 Content-Type
         },
         body: JSON.stringify({
-      "name": addName.value,
-      "date": addDate.value,
-      "address": addAddress.value
-    })
+          "name": addName.value,
+          "date": addDate.value,
+          "address": addAddress.value
+        })
       });
-      if (response.ok) {
+
+    if (response.ok) {
       this.reset()
-    
+      dialogFormVisible.value = false
     } else {
       throw new Error('POST请求失败');
+      dialogFormVisible.value = false
     }
   } catch (error) {
     console.error(error)
+    dialogFormVisible.value = false
   }
+}
 
+function print(){
+  const dataList = tableData.value
+
+  const header = Object.keys(dataList[0]).join(',')+'\n'
+  const rows = dataList.map(obj => Object.values(obj).join(',')).join('\n')
+  const blob = new Blob([header+rows],{type:'text/csv;charset=utf-8' })
+  saveAs(blob,'data.csv')
+  
 }
 
 </script>
