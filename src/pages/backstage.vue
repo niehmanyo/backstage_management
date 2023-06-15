@@ -65,9 +65,9 @@
 
 
         <el-header style="text-align: left ;
-                                  border-bottom: 1px solid #ccc;
-                                  line-height: 60px;
-                                  display: flex;">
+                                      border-bottom: 1px solid #ccc;
+                                      line-height: 60px;
+                                      display: flex;">
           <div class="toolbar text-1xl py-4">
 
             <el-dropdown style="cursor: pointer;">
@@ -104,19 +104,23 @@
                 </el-form-item>
 
                 <el-form-item>
-                  <el-input style="width: 25vh; padding-right: 1vh;" v-model="input" :suffix-icon="Search"
+                  <el-input style="width: 25vh; padding-right: 1vh;" v-model="user" :suffix-icon="Search"
                     placeholder="请输入搜索用户号">
                   </el-input>
                 </el-form-item>
 
                 <el-form-item>
-                  <el-input style="width: 25vh; padding-right: 1vh;" v-model="input" :suffix-icon="Search"
+                  <el-input style="width: 25vh; padding-right: 1vh;" v-model="foodName" :suffix-icon="Search"
                     placeholder="请输入菜品">
                   </el-input>
                 </el-form-item>
 
                 <el-form-item class="px-2">
-                  <el-button type="primary" @click="">搜索</el-button>
+                  <el-button type="primary" @click="search">搜索</el-button>
+                </el-form-item>
+
+                <el-form-item class="px-2">
+                  <el-button type="success" :icon="Loading" @click="reset">刷新</el-button>
                 </el-form-item>
               </el-row>
             </el-form>
@@ -125,7 +129,7 @@
           <div class="px-4">
             <el-row>
               <el-form-item class="px-3">
-                <el-button type="success" :icon="Edit" @click="">新增</el-button>
+                <el-button type="success" :icon="Edit" @click="add">新增</el-button>
               </el-form-item>
               <el-form-item class="px-3">
                 <el-button type="danger" :icon="Delete" @click="">批量删除</el-button>
@@ -136,6 +140,8 @@
               <el-form-item class="px-3">
                 <el-button type="primary" :icon="Download" @click="">导出</el-button>
               </el-form-item>
+
+
             </el-row>
           </div>
 
@@ -158,18 +164,40 @@
 
               <div class="example-pagination-block py-4 px-4">
                 <el-pagination v-model:current-page="currentPage4" v-model:page-size="pageSize4"
-                  :page-sizes="[5, 10]" :small="small" :disabled="disabled" :background="background"
-                  layout="total, sizes, prev, pager, next, jumper" :total="400" @size-change="handleSizeChange"
+                  :page-sizes="[5, 10, 20, 25]" :small="small" :disabled="disabled" :background="background"
+                  layout="total, sizes, prev, pager, next, jumper" :total="50" @size-change="handleSizeChange"
                   @current-change="handleCurrentChange" />
               </div>
             </el-scrollbar>
           </div>
         </el-main>
 
+        <el-dialog v-model="dialogFormVisible" title="新增">
+          <el-form>
+            <el-form-item label="用户名" :label-width="140">
+              <el-input v-model="addName" autocomplete="off" />
+            </el-form-item>
+
+            <el-form-item label="日期" :label-width="140">
+              <el-input v-model="addDate" autocomplete="off" />
+            </el-form-item>
+
+            <el-form-item label="地址" :label-width="140">
+              <el-input v-model="addAddress" autocomplete="off" />
+            </el-form-item>
+
+          </el-form>
+          <template #footer>
+            <span class="dialog-footer">
+              <el-button @click="dialogFormVisible = false">取消</el-button>
+              <el-button type="primary" @click="postData">
+                确认
+              </el-button>
+            </span>
+          </template>
+        </el-dialog>
 
       </el-container>
-
-
     </el-container>
 
   </div>
@@ -178,13 +206,12 @@
 <script lang="ts" setup>
 
 import { reactive, ref } from 'vue'
-import { Menu as IconMenu, Message, Setting, Edit, ArrowDown, UserFilled, Bowl, Delete, Upload, Download } from '@element-plus/icons-vue'
+import { Menu as IconMenu, Message, Setting, Edit, ArrowDown, UserFilled, Bowl, Delete, Upload, Download, Loading, Failed } from '@element-plus/icons-vue'
 import { Search, House } from '@element-plus/icons-vue'
-import { create } from 'lodash';
+import { create, method } from 'lodash';
 import axios from 'axios';
 
-const data = reactive([]);
-
+const data = ref([]);
 
 const currentPage4 = ref(1)
 
@@ -193,27 +220,22 @@ const small = ref(false)
 const background = ref(false)
 const disabled = ref(false)
 
+
+const user = ref("")
+const foodName = ref("")
 const input = ref("")
 
-const item = {
-  date: '2016-05-02',
-  name: 'Tom',
-  address: 'No. 189, Grove St, Los Angeles',
-}
+const tableData = ref(data)
 
-const a = Array.from({ length: 0 });
-const item1 = {
-  date: '2016-05-02',
-  name: 'Nie',
-  address: 'No. 189, Grove St, Los Angeles',
-}
-a.push(item1)
-const tableData = ref(a)
+const addName = ref("")
+const addDate = ref("")
+const addAddress = ref("")
+
+const dialogFormVisible = ref(false)
 
 async function fetchData(pageNum: number, pageSize: number) {
   try {
-
-    const response = await fetch(`http://localhost:9090/user/page?PageNum=${pageNum}&PageSize=${pageSize}`, {
+    const response = await fetch(`http://localhost:9090/user/page?PageNum=${pageNum}&PageSize=${pageSize}&name=${user.value}&foodName=${foodName.value}`, {
       headers: {
         'Content-Type': 'application/json' // 设置请求头的 Content-Type
       }
@@ -221,8 +243,8 @@ async function fetchData(pageNum: number, pageSize: number) {
     if (response.ok) {
       const res = await response.json();
       // tableData = res.data
-      tableData.value = res.data //因为tableData是个变量，所以要用tableData.value来保存
-      console.log(res.data)
+      tableData.value = res.records //因为tableData是个变量，所以要用tableData.value来保存
+      console.log(res.records)
     } else {
       console.error('请求失败:', response.status);
       console.log(response.json)
@@ -253,8 +275,48 @@ const handleCurrentChange = (val: number) => {
   fetchData(currentPage4.value, pageSize4.value)
 }
 
+const search = () => {
+  fetchData(currentPage4.value, pageSize4.value)
+}
 
+const reset = () => {
+  user.value = ""
+  foodName.value = ""
+  fetchData(currentPage4.value, pageSize4.value)
+}
 
+const add = () => {
+  dialogFormVisible.value = true
+}
+
+//这个是保存新增，调用接口新增用户
+async function postData() {
+  dialogFormVisible.value = false
+  try {
+ 
+    const response = await fetch(`http://localhost:9090/user/insert`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json' // 设置请求头的 Content-Type
+        },
+        body: JSON.stringify({
+      "name": addName.value,
+      "date": addDate.value,
+      "address": addAddress.value
+    })
+      });
+      if (response.ok) {
+      this.reset()
+    
+    } else {
+      throw new Error('POST请求失败');
+    }
+  } catch (error) {
+    console.error(error)
+  }
+
+}
 
 </script>
   

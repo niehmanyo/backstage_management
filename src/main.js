@@ -10,6 +10,7 @@ import "../src/assets/global.css"
 
 
 
+
 const app = createApp(App)
 
 app.use(router)
