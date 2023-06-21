@@ -3,52 +3,7 @@
     <el-container class="layout-container-demo  min-h-screen ">
 
       <el-aside style="height: 100%;" class="bg-light-100">
-        <el-menu :default-openeds="['1', '3']" background-color="rgb(48,65,86)" text-color="#fff" style="height: 100%;;"
-          class="min-h-screen ">
-
-          <div style="height: 60px; text-align: center; line-height: 60px; padding-bottom: 10px;">
-            <img src="../assets/logo.svg"
-              style="width: 20px; position: relative; top: 35px; margin-right: 5px; left: 50px;">
-            <b style="color:white;" class="text-2xl">
-              后台管理系统
-            </b>
-          </div>
-
-          <el-menu-item>
-            <template #title>
-
-              <el-icon>
-                <House />
-              </el-icon>
-              <span>主页</span>
-            </template>
-          </el-menu-item>
-
-
-          <el-menu-item>
-
-            <template #title>
-
-              <el-icon>
-                <UserFilled />
-              </el-icon>
-              <span>会员用户</span>
-            </template>
-          </el-menu-item>
-
-          <el-menu-item>
-
-            <template #title>
-
-              <el-icon>
-                <Bowl />
-              </el-icon>
-              <span>菜品</span>
-            </template>
-          </el-menu-item>
-
-
-        </el-menu>
+       <Aside />
 
       </el-aside>
 
@@ -97,17 +52,12 @@
           <div style="padding: 30px 0;">
             <el-form class="px-4">
               <el-row>
-                <el-form-item>
+                <!-- <el-form-item>
                   <el-input style="width: 25vh; padding-right: 1vh;" v-model="input" :suffix-icon="Search"
                     placeholder="请输入搜索日期">
                   </el-input>
-                </el-form-item>
+                </el-form-item> -->
 
-                <el-form-item>
-                  <el-input style="width: 25vh; padding-right: 1vh;" v-model="user" :suffix-icon="Search"
-                    placeholder="请输入搜索用户号">
-                  </el-input>
-                </el-form-item>
 
                 <el-form-item>
                   <el-input style="width: 25vh; padding-right: 1vh;" v-model="foodName" :suffix-icon="Search"
@@ -152,18 +102,20 @@
                 @selection-change="handleSelectionChange">
                 <el-table-column type="selection" width="55" />
 
-                <el-table-column width="180" prop="date" label="日期">
+                <!-- <el-table-column width="180" prop="date" label="日期">
                   <template #default="scope">{{ scope.row.date }}</template>
-                </el-table-column>
+                </el-table-column> -->
 
-                <el-table-column width=300 prop="name" label="姓名" />
-                <el-table-column prop="address" label="住址" />
+                <el-table-column width="300" prop="name" label="菜名" />
+                <el-table-column width="180" prop="image" label="路径" />
+                <el-table-column width="120" prop="price" label="价格" />
+                <el-table-column width="120" prop="num" label="数量" />
 
                 <el-table-column label="操作" fixed="right">
                   <template #default="scope">
 
                     <el-popconfirm title="你确认要删除吗？" confirm-button-text="确认" cancel-button-text="我再想想"
-                      @confirm="deleteUser(scope.row)">
+                      @confirm="deleteFood(scope.row)">
                       <template #reference>
                         <el-button type="danger" size="small" @click="">删除</el-button>
                       </template>
@@ -218,6 +170,8 @@
   
 <script lang="ts" setup>
 
+import Aside from '../components/Aside.vue';
+
 import { reactive, ref,h } from 'vue'
 import { Menu as IconMenu, Message, Setting, Edit, ArrowDown, UserFilled, Bowl, Delete, Upload, Download, Loading, Failed } from '@element-plus/icons-vue'
 import { Search, House } from '@element-plus/icons-vue'
@@ -267,7 +221,7 @@ const dialogFormVisible = ref(false)
 
 async function fetchData(pageNum: number, pageSize: number) {
   try {
-    const response = await fetch(`http://localhost:9090/user/page?PageNum=${pageNum}&PageSize=${pageSize}&name=${user.value}&foodName=${foodName.value}`, {
+    const response = await fetch(`http://localhost:9090/weixin/page?PageNum=${pageNum}&PageSize=${pageSize}&foodName=${foodName.value}`, {
       headers: {
         'Content-Type': 'application/json' // 设置请求头的 Content-Type
       }
@@ -298,7 +252,7 @@ const deleteBatch=()=>{
 
 }
 
-async function deleteUser(row) {
+async function deleteFood(row) {
   try {
     console.log(row)
     const response = await fetch(`http://localhost:9090/user/delete/${row.name}`, {
