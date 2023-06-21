@@ -82,7 +82,7 @@
                 </el-dropdown-menu>
               </template>
             </el-dropdown>
-            <span>用户名</span>
+            <span></span>
           </div>
         </el-header>
 
@@ -159,10 +159,17 @@
                 <el-table-column width=300 prop="name" label="姓名" />
                 <el-table-column prop="address" label="住址" />
 
-                <el-table-column label="操作" fixed="right" prop="address">
-                  <template #default>
-                    <el-button type="danger" size="small" @click=delete1>删除</el-button>
-                    <el-button type="primary" size="small" @click=edit>编辑</el-button>
+                <el-table-column label="操作" fixed="right">
+                  <template #default="scope">
+
+                    <el-popconfirm title="你确认要删除吗？" confirm-button-text="确认" cancel-button-text="我再想想"
+                      @confirm="deleteUser(scope.row)">
+                      <template #reference>
+                        <el-button type="danger" size="small" @click="">删除</el-button>
+                      </template>
+                    </el-popconfirm>
+
+                    <el-button type="primary" size="small" @click=edit(scope.row)>编辑</el-button>
                   </template>
                 </el-table-column>
 
@@ -211,12 +218,12 @@
   
 <script lang="ts" setup>
 
-import { reactive, ref } from 'vue'
+import { reactive, ref,h } from 'vue'
 import { Menu as IconMenu, Message, Setting, Edit, ArrowDown, UserFilled, Bowl, Delete, Upload, Download, Loading, Failed } from '@element-plus/icons-vue'
 import { Search, House } from '@element-plus/icons-vue'
 import { create, method } from 'lodash';
 import axios from 'axios';
-import { ElTable } from 'element-plus'
+import { ElTable ,ElNotification } from 'element-plus'
 import { saveAs } from "file-saver";
 
 interface User {
@@ -230,8 +237,12 @@ const multipleSelection = ref<User[]>([])
 
 const handleSelectionChange = (val: User[]) => {
   multipleSelection.value = val
+  for (let index = 0; index < multipleSelection.value.length; index++) {
+    const element = multipleSelection.value[index];
+    console.log(element.name) 
+  }
 }
-
+const yhm = ref("用户名")
 const data = ref([]);
 
 const currentPage4 = ref(1)
@@ -266,13 +277,54 @@ async function fetchData(pageNum: number, pageSize: number) {
       // tableData = res.data
       tableData.value = res.records //因为tableData是个变量，所以要用tableData.value来保存
       console.log(res.records)
+      ElNotification({
+        title: '提示',
+        message: h('i', { style: 'color: teal' }, '刷新成功'),
+      })
     } else {
       console.error('请求失败:', response.status);
       console.log(response.json)
+      ElNotification({
+        title: '提示',
+        message: h('i', { style: 'color: teal' }, '刷新失败'),
+      })
     }
   } catch (error) {
     console.error('请求错误:', error);
   }
+}
+
+const deleteBatch=()=>{
+
+}
+
+async function deleteUser(row) {
+  try {
+    console.log(row)
+    const response = await fetch(`http://localhost:9090/user/delete/${row.name}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json' // 设置请求头的 Content-Type
+      }
+    });
+    if (response.ok) {
+      const res = await response.json();
+      ElNotification({
+        title: '提示',
+        message: h('i', { style: 'color: teal' }, '删除成功'),
+      })
+    } else {
+      console.error('请求失败:', response.status);
+      console.log(response.json)
+      ElNotification({
+        title: '提示',
+        message: h('i', { style: 'color: teal' }, '删除失败'),
+      })
+    }
+  } catch (error) {
+    console.error('请求错误:', error);
+  }
+  this.reset()
 }
 
 fetchData(currentPage4.value, pageSize4.value)
@@ -283,8 +335,10 @@ const delete1 = () => {
 
 
 
-const edit = () => {
+const edit = (index) => {
   console.log('click')
+  console.log(index)
+
 }
 
 const handleSizeChange = (val: number) => {
@@ -304,6 +358,7 @@ const reset = () => {
   user.value = ""
   foodName.value = ""
   fetchData(currentPage4.value, pageSize4.value)
+
 }
 
 const add = () => {
@@ -312,9 +367,7 @@ const add = () => {
 
 //这个是保存新增，调用接口新增用户
 async function postData() {
-
   try {
-
     const response = await fetch(`http://localhost:9090/user/insert`,
       {
         method: 'POST',
@@ -331,9 +384,17 @@ async function postData() {
     if (response.ok) {
       this.reset()
       dialogFormVisible.value = false
+      ElNotification({
+        title: '提示',
+        message: h('i', { style: 'color: teal' }, '保存失败'),
+      })
     } else {
       throw new Error('POST请求失败');
       dialogFormVisible.value = false
+      ElNotification({
+        title: '提示',
+        message: h('i', { style: 'color: teal' }, '保存失败'),
+      })
     }
   } catch (error) {
     console.error(error)
@@ -341,14 +402,14 @@ async function postData() {
   }
 }
 
-function print(){
+function print() {
   const dataList = tableData.value
 
-  const header = Object.keys(dataList[0]).join(',')+'\n'
+  const header = Object.keys(dataList[0]).join(',') + '\n'
   const rows = dataList.map(obj => Object.values(obj).join(',')).join('\n')
-  const blob = new Blob([header+rows],{type:'text/csv;charset=utf-8' })
-  saveAs(blob,'data.csv')
-  
+  const blob = new Blob([header + rows], { type: 'text/csv;charset=utf-8' })
+  saveAs(blob, 'data.csv')
+
 }
 
 </script>
